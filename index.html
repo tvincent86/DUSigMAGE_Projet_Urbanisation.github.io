@@ -26,6 +26,12 @@
 	<!--JS Leaflet-->
 	<script src="./lib/leaflet-0.7.3/leaflet.js"></script>
 	
+	<!--Leaflet-Plugin-->
+	
+	<!--Leaflet.NavBar : https://github.com/davidchouse/Leaflet.NavBar-->
+	<link rel="stylesheet" type="text/css" href="./lib/leaflet-plugin/NavBar/Leaflet.NavBar.css" />
+	<script src="./lib/leaflet-plugin/NavBar/Leaflet.NavBar.js" type="text/javascript"></script>
+	
 	<script>
 		// Fonction qui contient l'aplicatino
 		function init(){
@@ -43,6 +49,9 @@
 
 			// Echelle
 			L.control.scale({imperial: false}).addTo(map);
+			
+			// NavBar
+			L.control.navbar({homeTitle : "Vue initiale"}).addTo(map);
 		}
 	</script>
   </head>
