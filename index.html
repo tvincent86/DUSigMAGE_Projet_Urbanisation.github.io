@@ -41,6 +41,8 @@
 			// Ajout de la couche OSM à la carte
 			OpenStreetMap.addTo(map);
 
+			// Echelle
+			L.control.scale({imperial: false}).addTo(map);
 		}
 	</script>
   </head>
