@@ -3,7 +3,23 @@
   <head>
     <title>Carte avec Leaflet</title>
     <meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">tony
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<style>
+		body {
+			padding: 0;
+			margin: 0;
+			background-color :#435a6b;
+		}
+		html, body {
+			height: 100%;
+		}
+		#map {
+			width:700px; 
+			height:700px; 
+			border:2px solid #bbb;
+		}
+	</style>
 	
 	<!--Leaflet-->
 	<link rel="stylesheet" type="text/css" href="./lib/leaflet-0.7.3/leaflet.css" />
@@ -11,5 +27,6 @@
 	<script src="./lib/leaflet-0.7.3/leaflet.js"></script>
   </head>
   <body>
+	  <div id="map"</div>
   </body>
 </html>
