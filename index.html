@@ -30,8 +30,16 @@
 		// Fonction qui contient l'aplicatino
 		function init(){
 			
-			var map = new L.Map('map');
+			var map = new L.Map('map', {
+				center: [46.11, -0.01],
+				zoom: 8
+			});
 			
+			// Création de la couche OSM
+			var OpenStreetMap = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+				attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
+			// Ajout de la couche OSM à la carte
+			OpenStreetMap.addTo(map);
 
 		}
 	</script>
