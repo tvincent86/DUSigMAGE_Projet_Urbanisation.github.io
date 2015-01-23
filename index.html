@@ -47,8 +47,8 @@
 		function init(){
 			
 			var map = new L.Map('map', {
-				center: [46.11, -0.01],
-				zoom: 8
+				center: [46.712, 0.093],
+				zoom: 13
 			});
 			
 			// Création de la couche OSM
@@ -61,7 +61,7 @@
 			var customCommunes = {
 			    style: function(feature) {
 			        return {
-						color: 'blue',
+						color: 'black',
 						weight: 1,
 						opacity: 0.5,
 						
@@ -74,6 +74,68 @@
 			};
 			var layerCommunes86 = new L.GeoJSON.AJAX('./data/communes86.geojson', customCommunes);       
 			layerCommunes86.addTo(map);	
+			
+			// Couche batiments		
+			var echantillon = 0;
+			var layerBatiment = new L.GeoJSON.AJAX('./data/batiment_vouzailles.geojson', {
+				style: function (feature) {
+					//
+					surface = feature.properties.Surfaces;
+					// On défini une valeur en fonction de la surface
+					if (surface == -999.000000) {
+						echantillon = 0;
+					} else if (surface <= 100) {
+						echantillon = 1;
+					} else  if (surface <= 500) {
+						echantillon = 2;
+					} else  {
+						echantillon = 3;
+					}
+					//
+					switch (echantillon) {
+			            case 0: return {
+							fillColor: "blue",
+						    color: "#000",
+						    weight: 1,
+						    opacity: 1,
+						    fillOpacity: 0.8
+						};
+			            case 1: return {
+							fillColor: "yellow",
+						    color: "#000",
+						    weight: 1,
+						    opacity: 1,
+						    fillOpacity: 0.8
+						};
+			            case 2: return {
+							fillColor: "orange",
+						    color: "#000",
+						    weight: 1,
+						    opacity: 1,
+						    fillOpacity: 0.8
+						};
+						case 3: return {
+							fillColor: "red",
+						    color: "#000",
+						    weight: 1,
+						    opacity: 1,
+						    fillOpacity: 0.8
+						};
+			        }
+				},
+				// Appel de la fonction au clic sur un élément
+				onEachFeature: function (feature, layer) {
+					var popupContent = "<p>Description</p><br>" +
+						feature.properties.TYPE + " - "+ feature.properties.Surfaces + " - "+ feature.properties.PENTE ;
+	
+					if (feature.properties && feature.properties.popupContent) {
+						popupContent += feature.properties.popupContent;
+					}
+		
+					layer.bindPopup(popupContent);
+			     }
+			});       
+			layerBatiment.addTo(map);	
 			
 			//----------------------------
 			// Control
@@ -98,6 +160,8 @@
 			    'OpenStreetMap': OpenStreetMap
 			};
 			var overlayLayers = {
+				'Commune' : layerCommunes86,
+				'Bâtiment' : layerBatiment
 			};
 			var control = L.control.activeLayers(baseLayers, overlayLayers).addTo(map)
 		}
