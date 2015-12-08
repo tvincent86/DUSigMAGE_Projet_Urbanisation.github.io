@@ -6,51 +6,22 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
 	<style>
-		body {
-			padding: 0;
-			margin: 0;
-			background-color :#435a6b;
-		}
-		html, body {
-			height: 100%;
-		}
-		div#bandeau {
-			width:850px;
-			height:100px;
-			background-color:#00CCFF;
-			border:1px solid black;
-			}
-		div#contenu {
-			width:850px;
-			height:700px;
-			background-color:#000;
-			border:1px solid black;
-			}
-		div#piedpage {
-			clear:both;
-			width:850px;
-			height:30px;
-			background-color:#33FF99;
-			border:1px solid black;
-			}
-			
-		#map {
-			width:698px; 
-			height:100%; 
-			float: left;
-			display: inline-block;
-		}
-		#legende { 
-			width: 150px;
-			height:100%;
-			float:right;
-			display: inline-block;
-			background-color :#ececec;
-
-		}
-		
-		
+	    body {
+		    padding: 0;
+		    margin: 0;
+		    background-color :#435a6b;
+	    }
+	    html, body {
+		    height: 100%;
+	    }		    
+	    #map {
+		    width:1000px; 
+		    height:700px; 
+	    }
 	</style>
+	
+	<!-- API Google Maps -->
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
 	
 	<!--Leaflet-->
 	<link rel="stylesheet" type="text/css" href="./lib/leaflet-0.7.3/leaflet.css" />
@@ -74,162 +45,294 @@
 	<script src="./lib/leaflet-plugin/LeafletAjax/leaflet.ajax.js"></script>
 	
 	<script>
-		// Fonction qui contient l'aplicatino
-		function init(){
-			
-			var map = new L.Map('map', {
-				center: [46.712, 0.093],
-				zoom: 13
-			});
-			
-
-			
-			
-	//MapQuest
-	var MapQuestOpen_OSM = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpeg', {
-	attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-	subdomains: '1234'}).addTo(map);
-	
-	// MapBox
-	var mapbox   = L.tileLayer('https://b.tiles.mapbox.com/v3/examples.c7d2024a/{z}/{x}/{y}.png', {
-	attribution: 'Map tiles by <a href="http://www.mapbox.com/">MapBox</a> &mdash; Map data &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'}).addTo(map);
-
-var stamenLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
-  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
-}).addTo(map);
-	
-				// Création de la couche OSM
-			var OpenStreetMap = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
-			// Ajout de la couche OSM à la carte
-			OpenStreetMap.addTo(map);
-					
-			// Couche communes
-			var customCommunes = {
-			    style: function(feature) {
-			        return {
-						color: 'black',
-						weight: 1,
-						opacity: 0.5,
-						
-						pcolor: "#fff",
-						popacity: 1,
-						fill: 0,
-						outline: 0
-					};			        
-			    }
-			};
-			var layerCommunes86 = new L.GeoJSON.AJAX('./data/communes86.geojson', customCommunes);       
-			layerCommunes86.addTo(map);	
-			
-			// Couche batiments		
-			var echantillon = 0;
-			var layerBatiment = new L.GeoJSON.AJAX('./data/batiment_vouzailles.geojson', {
-				style: function (feature) {
-					//
-					surface = feature.properties.Surfaces;
-					// On défini une valeur en fonction de la surface
-					if (surface == -999.000000) {
-						echantillon = 0;
-					} else if (surface <= 100) {
-						echantillon = 1;
-					} else  if (surface <= 500) {
-						echantillon = 2;
-					} else  {
-						echantillon = 3;
-					}
-					//
-					switch (echantillon) {
-			            case 0: return {
-							fillColor: "blue",
-						    color: "#000",
-						    weight: 1,
-						    opacity: 1,
-						    fillOpacity: 0.8
-						};
-			            case 1: return {
-							fillColor: "yellow",
-						    color: "#000",
-						    weight: 1,
-						    opacity: 1,
-						    fillOpacity: 0.8
-						};
-			            case 2: return {
-							fillColor: "orange",
-						    color: "#000",
-						    weight: 1,
-						    opacity: 1,
-						    fillOpacity: 0.8
-						};
-						case 3: return {
-							fillColor: "red",
-						    color: "#000",
-						    weight: 1,
-						    opacity: 1,
-						    fillOpacity: 0.8
-						};
-			        }
-				},
-				// Appel de la fonction au clic sur un élément
-				onEachFeature: function (feature, layer) {
-					var popupContent = "<p>Description</p><br>" +
-						feature.properties.TYPE + " - "+ feature.properties.Surfaces + " - "+ feature.properties.PENTE ;
-	
-					if (feature.properties && feature.properties.popupContent) {
-						popupContent += feature.properties.popupContent;
-					}
+	    // Fonction qui contient l'aplicatino
+	    function init(){
+		    
+		var map = new L.Map('map', {
+			center: [46.19, -1.41],
+			zoom: 12
+		});
 		
-					layer.bindPopup(popupContent);
-			     }
-			});       
-			layerBatiment.addTo(map);	
-			
-			//----------------------------
-			// Control
+		// Google Maps Hybride
+		var gmap_layer = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}',{
+		    maxZoom: 18,
+		    subdomains:['mt0','mt1','mt2','mt3']
+		});
 
-			// Echelle
-			L.control.scale({imperial: false}).addTo(map);
+		// MapQuest
+		var MapQuestOpen_OSM = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpeg', {
+		attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+		subdomains: '1234'});
+		
+		// MapBox
+		var mapbox   = L.tileLayer('https://b.tiles.mapbox.com/v3/examples.c7d2024a/{z}/{x}/{y}.png', {
+		attribution: 'Map tiles by <a href="http://www.mapbox.com/">MapBox</a> &mdash; Map data &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
+		
+		var stamenLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
+		attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+		});
+	
+		// Création de la couche OSM
+		var OpenStreetMap = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
+		// Ajout de la couche OSM à la carte
+		OpenStreetMap.addTo(map);
+				
+		// Couche communes
+		var customCommunes = {
+		    style: function(feature) {
 			
-			// NavBar
-			L.control.navbar({homeTitle : "Vue initiale"}).addTo(map);
+			//
+			codeInsee = feature.properties.CODE_INSEE;
+			//
+			if (codeInsee == 17121) {
+			    return {
+				fillColor: "#fff",
+				color: "#000",
+				weight: 2,
+				opacity: 1,
+				fillOpacity: 0
+			    };
+			}else{
+			    return {
+				//fillColor: "#848484",
+				fillColor: "#fff",
+				color: "#000",
+				weight: 1,
+				opacity: 0.4,
+				fillOpacity: 0.6
+			    };
+			}
+						        
+		    }
+		};
+
+		var layerCommunesIleDeRe = new L.GeoJSON.AJAX('./data/RGE_Commune_Ile_de_Re_epsg4326.geojson', customCommunes);       
+		layerCommunesIleDeRe.addTo(map);
 			
-			// Position de la souris
-			L.control.mousePosition({position: 'bottomright', prefix: 'XY : ', separator: ' , ', emptyString: 'Position de la souris'}).addTo(map);
-			
-			// MiniMap
-			var OpenStreetMap2 = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-				minZoom: 6
-			});
-			var miniMap = new L.Control.MiniMap(OpenStreetMap2, { toggleDisplay: true }).addTo(map);
-			
-			// Selecteur de couche
-			var baseLayers = {
-			    'MapQuestOSM': MapQuestOpen_OSM,
-			    'MapBox': mapbox,
-			    'Stamen': stamenLayer,
-			    'OpenStreetMap': OpenStreetMap
-			};
-			var overlayLayers = {
-				'Commune' : layerCommunes86,
-				'Bâtiment' : layerBatiment
-			};
-			var control = L.control.activeLayers(baseLayers, overlayLayers).addTo(map)
-		}
+		// Couche batiments		
+		var echantillon = 0;
+		var layerBatiment = new L.GeoJSON.AJAX('./data/Evaluation_Bati_epsg4326.geojson', {
+		    style: function (feature) {
+			//
+			anneeConstruction = feature.properties.AnneeConst;
+			// On défini une valeur en fonction de la surface
+			if (anneeConstruction >= 1950 && anneeConstruction < 1969) {
+				echantillon = 0;
+			} else if (anneeConstruction >= 1969 && anneeConstruction < 1991) {
+				echantillon = 1;
+			} else  if (anneeConstruction >= 1991 && anneeConstruction < 2014) {
+				echantillon = 2;
+			} else  if (anneeConstruction >= 2014) {
+				echantillon = 3;
+			} else  {
+				echantillon = 4;
+			}
+			//
+			switch (echantillon) {
+			    case 0: return {
+				fillColor: "#F3E2A9",
+				color: "#000",
+				weight: 1,
+				opacity: 0.7,
+				fillOpacity: 0.8
+			    };
+			    case 1: return {
+				fillColor: "#F6CECE",
+				color: "#000",
+				weight: 1,
+				opacity: 0.7,
+				fillOpacity: 0.8
+			    };
+			    case 2: return {
+				fillColor: "#F78181",
+				color: "#000",
+				weight: 1,
+				opacity: 0.7,
+				fillOpacity: 0.8
+			    };
+			    case 3: return {
+				fillColor: "#FF0000",
+				color: "#000",
+				weight: 1,
+				opacity: 0.7,
+				fillOpacity: 0.8
+			    };
+			    case 4: return {
+				fillColor: "blue",
+				color: "#000",
+				weight: 1,
+				opacity: 1,
+				fillOpacity: 0.8
+			    };
+			}
+		    },
+		    // Appel de la fonction au clic sur un élément
+		    onEachFeature: function (feature, layer) {
+			    var popupContent = "<p>Description</p><br>" +
+				    feature.properties.TYPE + " - "+ feature.properties.Surfaces + " - "+ feature.properties.PENTE ;
+
+			    if (feature.properties && feature.properties.popupContent) {
+				    popupContent += feature.properties.popupContent;
+			    }
+    
+			    layer.bindPopup(popupContent);
+		     }
+		});       
+		layerBatiment.addTo(map);	
+
+		// Style Batiment
+		var customBatiment1950 = {
+		    style: function(feature) {
+			//
+			bati1950 = feature.properties.bati1950;
+			//
+			if (bati1950 == 'bati') {
+			    return {
+				fillColor: "#F3E2A9",
+				color: "#F3E2A9",
+				weight: 2,
+				opacity: 0.8,
+				fillOpacity: 0.8
+			    };
+			}
+			else{
+			    return {
+				fillColor: "#fff",
+				color: "#000",
+				weight: 1,
+				opacity: 0,
+				fillOpacity: 0
+			    };
+			}
+		    }
+		};
+		var layerBatiment1950 = new L.GeoJSON.AJAX('./data/Evaluation_Bati_epsg4326.geojson', customBatiment1950);       
+		layerBatiment1950.addTo(map);
+		
+		var customBatiment1969 = {
+		    style: function(feature) {
+			//
+			bati1969 = feature.properties.bati1969;
+			//
+			if (bati1969 == 'bati') {
+			    return {
+				fillColor: "#F6CECE",
+				color: "#F6CECE",
+				weight: 2,
+				opacity: 0.8,
+				fillOpacity: 0.8
+			    };
+			}
+			else{
+			    return {
+				fillColor: "#fff",
+				color: "#000",
+				weight: 1,
+				opacity: 0,
+				fillOpacity: 0
+			    };
+			}
+		    }
+		};
+		var layerBatiment1969 = new L.GeoJSON.AJAX('./data/Evaluation_Bati_epsg4326.geojson', customBatiment1969);       
+		layerBatiment1969.addTo(map);
+
+		var customBatiment1991 = {
+		    style: function(feature) {
+			//
+			bati1991 = feature.properties.bati1991;
+			//
+			if (bati1991 == 'bati') {
+			    return {
+				fillColor: "#F78181",
+				color: "#F78181",
+				weight: 2,
+				opacity: 0.8,
+				fillOpacity: 0.8
+			    };
+			}
+			else{
+			    return {
+				fillColor: "#fff",
+				color: "#000",
+				weight: 1,
+				opacity: 0,
+				fillOpacity: 0
+			    };
+			}
+		    }
+		};
+		var layerBatiment1991 = new L.GeoJSON.AJAX('./data/Evaluation_Bati_epsg4326.geojson', customBatiment1991);       
+		layerBatiment1991.addTo(map);
+		
+		var customBatiment2014 = {
+		    style: function(feature) {
+			//
+			bati2014 = feature.properties.bati2014;
+			//
+			if (bati2014 == 'bati') {
+			    return {
+				fillColor: "#FF0000",
+				color: "#FF0000",
+				weight: 2,
+				opacity: 0.8,
+				fillOpacity: 0.8
+			    };
+			}
+			else{
+			    return {
+				fillColor: "#fff",
+				color: "#000",
+				weight: 1,
+				opacity: 0,
+				fillOpacity: 0
+			    };
+			}
+		    }
+		};
+		var layerBatiment2014 = new L.GeoJSON.AJAX('./data/Evaluation_Bati_epsg4326.geojson', customBatiment2014);       
+		layerBatiment2014.addTo(map);
+					
+		//----------------------------
+		// Control
+
+		// Echelle
+		L.control.scale({imperial: false}).addTo(map);
+		
+		// NavBar
+		L.control.navbar({homeTitle : "Vue initiale"}).addTo(map);
+		
+		// Position de la souris
+		L.control.mousePosition({position: 'bottomright', prefix: 'XY : ', separator: ' , ', emptyString: 'Position de la souris'}).addTo(map);
+		
+		// MiniMap
+		var OpenStreetMap2 = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			minZoom: 6
+		});
+		var miniMap = new L.Control.MiniMap(OpenStreetMap2, { toggleDisplay: true }).addTo(map);
+		
+		// Selecteur de couche
+		var baseLayers = {
+		    'Google Maps' : gmap_layer,
+		    'MapQuestOSM': MapQuestOpen_OSM,
+		    'MapBox': mapbox,
+		    'Stamen': stamenLayer,
+		    'OpenStreetMap': OpenStreetMap
+		};
+		var overlayLayers = {
+			//'Commune' : layerCommunesIleDeRe,
+			'Bâti 1950' : layerBatiment1950,
+			'Bâti 1969' : layerBatiment1969,
+			'Bâti 1991' : layerBatiment1991,
+			'Bâti 2014' : layerBatiment2014,
+			'Bâtiment' : layerBatiment
+		};
+		var control = L.control.activeLayers(baseLayers, overlayLayers).addTo(map);
+	    }
 	</script>
   </head>
   <body onload="init()">
-		<div id="bandeau"><h1>Cadastre solaire - Vouzailles (86)</h1></div>
-		<div id="contenu">
-			<div id="map"></div>
-			<div id="legende">
-				<ul>
-					<li>Bleu : non défini</li>
-					<li>jaune : surface <=100</li>
-					<li>orange : surface <= 500</li>
-					<li>rouge  : surface > 500</li>
-				</ul>
-		  </div>
-		</div>
-		<div id="piedpage">Mentions légals | Crédits | 2015 Copyright Tony VINCENT</div>
+	<div id="map"></div>
   </body>
 </html>
