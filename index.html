@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
   <head>
-    <title>Carte avec Leaflet</title>
+    <title>Evaluation de l'extension urbaine sur de la commune de La Couarde-sur-Mer</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	
@@ -9,12 +9,17 @@
 	    body {
 		    padding: 0;
 		    margin: 0;
-		    background-color :#ececec;
+		    background-color :#fff;
 	    }
 	    html, body {
 		    height: 100%;
-		    background-color :#ececec;
-	    }		    
+		    background-color :#fff;
+	    }
+	    div#contenu {
+		    width:99%;
+		    height:100%;
+		    border:1px solid black;
+		    }		    
 	    #map {
 		    width:80%; 
 		    height:700px; 
@@ -25,30 +30,39 @@
 	    div#bandeau {
 		    width:100%;
 		    height:100px;
-		    background-color:#00CCFF;
+		    background-color:#01DFA5;
 		    border:1px solid black;
+		    text-align:center;
 		    }
-	    div#contenu {
-		    width:100%;
-		    height:100%;
-<!--
-		    background-color:#000;
--->
-		    border:1px solid black;
-		    }
+
 	    div#piedpage {
 		    clear:both;
 		    width:100%;
 		    height:30px;
-		    background-color:#33FF99;
+		    background-color:#ececec;
 		    border:1px solid black;
+		    text-align:right;
 		    }
-	    #legende { 
-		    width: 20%;
+	    #col_droite { 
+		    width: 19.8%;
 		    height:700px;
 		    float:right;
 		    display: inline-block;
-		    background-color :#ececec;
+		    background-color :#fff;
+		    border-left:1px solid black;
+		    
+	    }
+	    #legende { 
+		    width: 100%;
+		    height:300px;
+		    padding: 10px;
+	    }
+	    #commentaire { 
+		    background-color:#fff;
+		    border:1px solid black;
+		    width: 100%;
+		    height:100%;
+		    padding: 10px;
 	    }
 	</style>
 	
@@ -139,7 +153,9 @@
 		    }
 		};
 
-		var layerCommunesIleDeRe = new L.GeoJSON.AJAX('./data/RGE_Commune_Ile_de_Re_epsg4326.geojson', customCommunes);       
+		var layerCommunesIleDeRe = new L.GeoJSON.AJAX('./data/RGE_Commune_Ile_de_Re_epsg4326.geojson', 
+		     customCommunes
+		);       
 		layerCommunesIleDeRe.addTo(map);
 			
 		// Couche batiments		
@@ -201,9 +217,10 @@
 		    },
 		    // Appel de la fonction au clic sur un élément
 		    onEachFeature: function (feature, layer) {
+			console.log(feature);
 			    var popupContent = "<p>Description</p><br>" +
-				    feature.properties.TYPE + " - "+ feature.properties.Surfaces + " - "+ feature.properties.PENTE ;
-
+				    "Année de la construction : " + feature.properties.AnneeConst + " - <br> Commune : La Couarde sur Mer";
+//
 			    if (feature.properties && feature.properties.popupContent) {
 				    popupContent += feature.properties.popupContent;
 			    }
@@ -366,26 +383,57 @@
   </head>
   <body onload="init()">
 	
+	
 	<div id="contenu">
-	    <div id="bandeau"><h1>Carte des établissements scolaire dans la Grande Région</h1></div>
+	    <div id="bandeau">
+		<h1>Evaluation de l'extension urbaine sur de la commune de La Couarde-sur-Mer</h1>
+		<h3>Progression de l'urbanisation de 1950 à 2014</h3>
+	    </div>
 		<div id="map"></div>
-		<div id="legende">
-			Evolution urbaine
+		<div id="col_droite">
+		    <div id="legende">
+			<h3>Légende</h3>
+			<br><br>
+			<u>Evolution urbaine</u>
 			<ul>
 				<li><img src="./images/img_1950.png" /> Depuis 1950</li>
 				<li><img src="./images/img_1969.png" /> Depuis 1969</li>
 				<li><img src="./images/img_1991.png" /> Depuis 1991</li>
 				<li><img src="./images/img_2014.png" /> Depuis 2014</li>
 			</ul>
-			Commune
+			<u>Limite de commune</u>
 			<ul>
 				<li><img src="./images/img_com.png" /> La couarde-Sur-Mer</li>
-				<li><img src="./images/img_com1.png" /> Autres commune</li>
+				<li><img src="./images/img_com1.png" /> Autres communes</li>
 				
 			</ul>
+		    </div>		    		    		
 		</div>
+
 	    <div id="piedpage">Mentions légals | Crédits | 2015 Copyright Tony VINCENT</div>
+	    
 	</div>
+	<div id="Commentaire">
+		<h3>Commentaire</h3>
+		<br>
+		En 1950, la commune présente seulement deux îlots urbanisés : le bourg (31.56 ha) et une construction
+
+isolée au sud-est de la commune (1.51 ha). En 1969, la surface urbanisée passe de 33 ha à 92 ha, soit 
+
+près du triple, en s’étendant principalement au sud et à l’ouest du bourg, ainsi que sur des îlots épars
+
+à l’ouest et au nord-est de la commune. En 1991, la surface urbanisée double encore pour passer à 
+
+181 ha. L’extension se poursuit et s’étend à l’est du bourg, au sud de la départementale D735 . En 
+
+2014, 24 ha supplémentaires sont urbanisés, ce qui porte la superficie totale à 205 ha soit une 
+
+croissance de 13% depuis 1991, soit une augmentation bien moindre que par le passé. Au final, 
+
+l’urbanisation de 2014 présente une augmentation de 521 % par rapport à 1950.
+
+
+	    </div>
 	
 
   </body>
