@@ -87,20 +87,22 @@
 
 		// MapQuest
 		var MapQuestOpen_OSM = L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpeg', {
-		attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
-		subdomains: '1234'});
+		    attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+		    subdomains: '1234'
+		});
 		
 		// MapBox
 		var mapbox   = L.tileLayer('https://b.tiles.mapbox.com/v3/examples.c7d2024a/{z}/{x}/{y}.png', {
 		attribution: 'Map tiles by <a href="http://www.mapbox.com/">MapBox</a> &mdash; Map data &copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
 		
 		var stamenLayer = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.png', {
-		attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+		    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
 		});
 	
 		// Création de la couche OSM
 		var OpenStreetMap = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-			attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'});
+		    attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		});
 		// Ajout de la couche OSM à la carte
 		OpenStreetMap.addTo(map);
 				
@@ -108,7 +110,7 @@
 		var customCommunes = {
 		    style: function(feature) {
 			
-			//
+			// Récupération du code INSEE
 			codeInsee = feature.properties.CODE_INSEE;
 			//
 			if (codeInsee == 17121) {
@@ -121,7 +123,6 @@
 			    };
 			}else{
 			    return {
-				//fillColor: "#848484",
 				fillColor: "#fff",
 				color: "#000",
 				weight: 1,
@@ -129,10 +130,8 @@
 				fillOpacity: 0.6
 			    };
 			}
-						        
 		    }
 		};
-
 		var layerCommunesIleDeRe = new L.GeoJSON.AJAX('./data/RGE_Commune_Ile_de_Re_epsg4326.geojson', customCommunes);       
 		layerCommunesIleDeRe.addTo(map);
 			
@@ -201,7 +200,6 @@
 			    if (feature.properties && feature.properties.popupContent) {
 				    popupContent += feature.properties.popupContent;
 			    }
-    
 			    layer.bindPopup(popupContent);
 		     }
 		});       
@@ -347,7 +345,6 @@
 		    'OpenStreetMap': OpenStreetMap
 		};
 		var overlayLayers = {
-			//'Commune' : layerCommunesIleDeRe,
 			'Bâti 1950' : layerBatiment1950,
 			'Bâti 1969' : layerBatiment1969,
 			'Bâti 1991' : layerBatiment1991,
@@ -385,22 +382,11 @@
 	<div id="Commentaire">
 	    <h3>Commentaire</h3>
 	    <br>
-	    En 1950, la commune présente seulement deux îlots urbanisés : le bourg (31.56 ha) et une construction
+Quibus occurrere bene pertinax miles explicatis ordinibus parans hastisque feriens scuta qui habitus iram pugnantium concitat et dolorem proximos iam gestu terrebat sed eum in certamen alacriter consurgentem revocavere ductores rati intempestivum anceps subire certamen cum haut longe muri distarent, quorum tutela securitas poterat in solido locari cunctorum.
 
-isolée au sud-est de la commune (1.51 ha). En 1969, la surface urbanisée passe de 33 ha à 92 ha, soit 
+Hac ex causa conlaticia stipe Valerius humatur ille Publicola et subsidiis amicorum mariti inops cum liberis uxor alitur Reguli et dotatur ex aerario filia Scipionis, cum nobilitas florem adultae virginis diuturnum absentia pauperis erubesceret patris.
 
-près du triple, en s’étendant principalement au sud et à l’ouest du bourg, ainsi que sur des îlots épars
-
-à l’ouest et au nord-est de la commune. En 1991, la surface urbanisée double encore pour passer à 
-
-181 ha. L’extension se poursuit et s’étend à l’est du bourg, au sud de la départementale D735 . En 
-
-2014, 24 ha supplémentaires sont urbanisés, ce qui porte la superficie totale à 205 ha soit une 
-
-croissance de 13% depuis 1991, soit une augmentation bien moindre que par le passé. Au final, 
-
-l’urbanisation de 2014 présente une augmentation de 521 % par rapport à 1950.
-
+Procedente igitur mox tempore cum adventicium nihil inveniretur, relicta ora maritima in Lycaoniam adnexam Isauriae se contulerunt ibique densis intersaepientes itinera praetenturis provincialium et viatorum opibus pascebantur.
 
 	</div>
   </body>
